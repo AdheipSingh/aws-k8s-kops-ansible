@@ -21,6 +21,13 @@
     before: 'name: nodes'
   when: master_max_price is defined
   notify: "Push instance groups config"
+  
+- name: ADD LABELS FOR WORKER NODES 
+  lineinfile:
+     path: /tmp/{{ cluster_name }}-ig-conf.yaml
+     line: '    {{ node_labels }}'
+     insertbefore: 'role: Node'        
+     when: node_labels is defined
 
 - name: Change Machine type
   shell: "sed -i -e 's/^  machineType:.*/  machineType:  {{ machineType_worker }}  /g' /tmp/{{ cluster_name }}-ig-conf.yaml"
